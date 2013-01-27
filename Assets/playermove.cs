@@ -26,8 +26,19 @@ public class playermove : MonoBehaviour {
 	public float jumpForce;
 	public float gravity;
 	private CharacterController characterController;
+	private Animation animation;
+	private MarioAnimation marioAnimation;
 	private Vector3 velocity;
 	public bool jumpable = true;
+	public bool controlLock = false;
+	
+	public bool sonic = false;
+	public bool link = false;
+	public bool donkeykongarm = false;
+	public bool donkeykongattack = false;
+	public float donkeykongattackcooldown = 3;
+	public bool mario = false;
+	
 	
 	public enum State
 	{
@@ -44,9 +55,22 @@ public class playermove : MonoBehaviour {
 		switch (newState)
 		{
 		case State.Idle:
+			
+			if (mario) {
+			//animation.Loop=false;
+			//marioAnimation.StartCoroutine(marioAnimation.Animate());
+			}
+			else if (donkeykongarm) {
+			}
+			else if (sonic) {
+			}
+			else {
+			animation.Loop=true;
+			animation.StartCoroutine(animation.Animate());
+			}
 			if (state == State.Jump)
 			{
-				// spawn landing particles
+				
 			}
 			break;
 			
@@ -57,7 +81,6 @@ public class playermove : MonoBehaviour {
 			break;
 		
 		case State.Wall:
-			Debug.Log ("Wall State Set");
 			break;
 			
 		case State.Air:
@@ -69,35 +92,77 @@ public class playermove : MonoBehaviour {
 	
 	void Awake()
 	{
+		controlLock = false;
 		characterController = GetComponent<CharacterController>();
-	}
-
-	void OnCollisionEnter(Collision collision)
-	{
-		Debug.Log("Hello");
+		animation = GetComponentInChildren<Animation>();
+		marioAnimation = GetComponentInChildren<MarioAnimation>();
 	}
 	
-	void OnTriggerEnter(Collider collider)
+	void KillHeart() 
 	{
-		Debug.Log("Hello");
+		animation.Loop=false;
+		//marioAnimation.Loop=false;
+		controlLock = true;
+		DeathAnimation deathAnimation = GetComponentInChildren<DeathAnimation>();
+		deathAnimation.StartCoroutine(deathAnimation.Animate());
 	}
 	
-	/*
-	bool CheckWall(Vector3 motion)
+	private IEnumerator ResumeAfterSeconds(int resumetime)
 	{
-		return Physics.CheckSphere(transform.position + motion, characterController.radius, ~(1<<8));
+		yield return new WaitForSeconds(3);
 	}
-
-	*/
+	
+	void OnTriggerEnter(Collider collider) 
+	{
+		if (collider.gameObject.tag == "Spike") {
+			KillHeart();
+		}
+		else if (collider.gameObject.tag == "SonicShoes") {
+			if (sonic == false) {
+			sonic = true;
+			moveSpeed += 7;
+			}
+		}
+		else if (collider.gameObject.tag == "MarioHat") {
+			if (mario == false) {
+			mario = true;
+			
+			Debug.Log (transform.localScale.ToString());
+			Debug.Log (transform.position.ToString());
+			
+			transform.Translate(new Vector3(0,2.8F,0));
+			transform.GetChild (0).transform.localScale = new Vector3(2.0F,0.2F,1.0F);
+			transform.GetChild (1).transform.localScale = new Vector3(1.0F,2.0F,2.0F);
+			transform.GetChild (2).transform.localScale = new Vector3(1.0F,1.0F,1.0F);
+			characterController.radius = 0.5F;
+			characterController.height = 2.0F;		
+			}
+		}
+		
+		else if (collider.gameObject.tag == "DonkeyPunch") {
+			if (donkeykongarm == false) {
+				donkeykongarm = true;
+			}
+		}
+		else if (collider.gameObject.tag == "Monster") {
+			KillHeart();
+		}
+	}
 	
 	void Update()
 	{
-		//if (state == State.Idle)
 		
-		//state = State.Idle;
+		if (transform.position.y < -25) {
+			KillHeart ();
+		}
 		
+		if (controlLock) {
+			return;
+		}
 		Vector3 move = Input.GetAxisRaw("Horizontal") * Vector3.right;
+		
 		move *= moveSpeed * Time.deltaTime;
+		
 		
 		velocity += gravity * Vector3.up * Time.deltaTime;
 		
@@ -110,6 +175,7 @@ public class playermove : MonoBehaviour {
 		
 			if (Input.GetButtonDown ("Jump"))
 			{
+				animation.Loop=false;
 				SetState(State.Jump);
 			}	
 		}
@@ -125,6 +191,20 @@ public class playermove : MonoBehaviour {
 		move += velocity * Time.deltaTime;
 		
 		characterController.Move(move);
+		
+		if (Input.GetButtonDown ("Fire1")) {
+			if (donkeykongattack == false) {
+				donkeykongattack = true;
+				donkeykongattackcooldown = 0;
+			}
+		}
+
+		if (donkeykongattackcooldown >= 0.75F) {
+			donkeykongattack = false;
+		} else {
+			donkeykongattackcooldown += Time.deltaTime;
+		}
+		
 	}
 	
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class wallcollision : MonoBehaviour {
+public class WallCollision : MonoBehaviour {
 	
 	public CharacterController characterController;
 	
@@ -17,18 +17,19 @@ public class wallcollision : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider collider)
 	{
-		
+		if (collider.gameObject.tag == "Wall") {
 		playermove player = characterController.GetComponent<playermove>();
 		player.SetState (playermove.State.Wall);
-
+		}
 	}
 	
 	void OnTriggerExit(Collider collider)
 	{
-		
+		if (collider.gameObject.tag == "Wall") {
 		playermove player = characterController.GetComponent<playermove>();
 		player.SetState (playermove.State.Air);
 		player.jumpable = true;
+		}
 
 	}
 	

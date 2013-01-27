@@ -15,10 +15,10 @@ public class Animation : MonoBehaviour {
 	{
 		currentFrame = 0;
 		secondsToWait = 1/FPS;
-		StartCoroutine(Animate());
+		StartCoroutine (Animate ());
 	}
 	
-	IEnumerator Animate()
+	public IEnumerator Animate()
 	{
 		bool stop = false;
 		
