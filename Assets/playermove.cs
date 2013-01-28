@@ -55,19 +55,9 @@ public class playermove : MonoBehaviour {
 		switch (newState)
 		{
 		case State.Idle:
-			
-			if (mario) {
-			//animation.Loop=false;
-			//marioAnimation.StartCoroutine(marioAnimation.Animate());
-			}
-			else if (donkeykongarm) {
-			}
-			else if (sonic) {
-			}
-			else {
 			animation.Loop=true;
 			animation.StartCoroutine(animation.Animate());
-			}
+			
 			if (state == State.Jump)
 			{
 				
@@ -76,7 +66,8 @@ public class playermove : MonoBehaviour {
 			
 		case State.Jump:
 			velocity = jumpForce * Vector3.up;
-			
+			AudioSource audiosource = GetComponent<AudioSource>();
+			audiosource.Play();
 			// play animation
 			break;
 		
@@ -115,6 +106,7 @@ public class playermove : MonoBehaviour {
 	void OnTriggerEnter(Collider collider) 
 	{
 		if (collider.gameObject.tag == "Spike") {
+			Debug.Log("Spike Detected");
 			KillHeart();
 		}
 		else if (collider.gameObject.tag == "SonicShoes") {
@@ -152,7 +144,7 @@ public class playermove : MonoBehaviour {
 	void Update()
 	{
 		
-		if (transform.position.y < -25) {
+		if (transform.position.y < -60) {
 			KillHeart ();
 		}
 		
@@ -193,9 +185,11 @@ public class playermove : MonoBehaviour {
 		characterController.Move(move);
 		
 		if (Input.GetButtonDown ("Fire1")) {
-			if (donkeykongattack == false) {
-				donkeykongattack = true;
-				donkeykongattackcooldown = 0;
+			if (donkeykongarm) {
+				if (donkeykongattack == false) {
+					donkeykongattack = true;
+					donkeykongattackcooldown = 0;
+				}
 			}
 		}
 

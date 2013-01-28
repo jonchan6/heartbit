@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class WallCollision : MonoBehaviour {
+public class wallcollision : MonoBehaviour {
 	
 	public CharacterController characterController;
 	
@@ -12,7 +12,7 @@ public class WallCollision : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		
 	}
 	
 	void OnTriggerEnter(Collider collider)

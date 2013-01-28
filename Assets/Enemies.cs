@@ -17,8 +17,15 @@ public class Enemies : MonoBehaviour {
 	
 	void onTriggerEnter(Collider collider)
 	{
-			
+		if (collider.gameObject.tag == "DonkeyKongArm") {
+			playermove player = characterController.GetComponent<playermove>();
+			if (player.donkeykongattack) {
+			Destroy(gameObject, 0.50F);
+			}
+		}
+				
 	}
+	
 	
 	void onTriggerStay(Collider collider)
 	{

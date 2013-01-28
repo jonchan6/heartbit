@@ -4,12 +4,15 @@ using System.Collections;
 public class MusicControl : MonoBehaviour {
 	
 	AudioSource audioSource;
+	public Camera camera;
+	public Camera camera2;
 	
 	// Use this for initialization
 	void Awake () {
 		
 		audioSource = GetComponent<AudioSource>();
 		audioSource.loop = true;
+		
 		
 
 	}
@@ -25,6 +28,10 @@ public class MusicControl : MonoBehaviour {
 			if (!audioSource.isPlaying) {
 			audioSource.Play ();
 			}
+			if (camera && camera2) {
+				camera.enabled = false;
+				camera2.enabled = true;
+			}
 		}
 	}
 	
@@ -33,6 +40,10 @@ public class MusicControl : MonoBehaviour {
 		if (collider.gameObject.tag == "Player") {
 			if (!audioSource.isPlaying) {
 			audioSource.Play ();
+			}
+			if (camera && camera2) {
+				camera.enabled = false;
+				camera2.enabled = true;
 			}
 		}
 	}

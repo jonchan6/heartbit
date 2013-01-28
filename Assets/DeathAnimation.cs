@@ -6,6 +6,7 @@ public class DeathAnimation : MonoBehaviour {
 	public float FPS;
 	private float secondsToWait;
 	public bool Loop;
+	public bool played;
 	public Texture[] frames;
 	
 	private int currentFrame;
@@ -15,10 +16,17 @@ public class DeathAnimation : MonoBehaviour {
 	{
 		currentFrame = 0;
 		secondsToWait = 1/FPS;
+		played = false;
 	}
 	
 	public IEnumerator Animate()
 	{
+		AudioSource audiosource = GetComponent<AudioSource>();
+		if (!played) {
+		audiosource.Play();
+		played = true;
+		}
+		
 		bool stop = false;
 		
 		if(currentFrame >= frames.Length)

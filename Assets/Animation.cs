@@ -24,8 +24,10 @@ public class Animation : MonoBehaviour {
 		
 		if(currentFrame >= frames.Length)
 		{
-			if(Loop == false)
+			if(Loop == false) {
 				stop = true;
+				currentFrame = 0;
+			}
 			else
 				currentFrame = 0;
 		}
@@ -35,7 +37,7 @@ public class Animation : MonoBehaviour {
 		renderer.material.mainTexture = frames[currentFrame];
 		currentFrame++;
 		
-		if(stop == false)
+		if (stop == false)
 			StartCoroutine(Animate());
 	}
 }
